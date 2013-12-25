@@ -30,7 +30,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		Log.i(LOG_TAG, "Begin");
 		setContentView(R.layout.activity_main);
 		
-		/* if (savedInstanceState == null) {
+		 if (savedInstanceState == null) {
 		        // Add the fragment on initial activity setup
 			 Log.i(LOG_TAG, "Inside If Statement");
 		        mainFragment = new MainFragment();
@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		        // Or set the fragment from restored state info
 		        mainFragment = (MainFragment) getSupportFragmentManager()
 		        .findFragmentById(android.R.id.content);
-		    }*/
+		    }
 		
 		getContactInfo = (Button)findViewById(R.id.bDisplayContactQR);
 		receiveContactInfo = (Button)findViewById(R.id.bReceiveContactQR);
@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;		
 		}		
 	}
-	/*
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -130,7 +130,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			Toast toast = Toast.makeText(getApplicationContext(), toastString, duration);
 			toast.show();			
 		}
-	}*/
+	}
 	
 	// checks if a specific contact already exists
 	private boolean contactExists(String phoneNumber){
