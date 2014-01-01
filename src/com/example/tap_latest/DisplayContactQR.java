@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -20,21 +19,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ImageView;
 
-public class DisplayContactQR extends Activity{
-	
-	
+public class DisplayContactQR extends Activity {
+
 	private ImageView qrImage;
 	private String ContactData;
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.display_qr);	
-		
-		qrImage = (ImageView)findViewById(R.id.ivQRcode);
+		setContentView(R.layout.display_qr);
+
+		qrImage = (ImageView) findViewById(R.id.ivQRcode);
 		ContactData = generateContactInfo();
-		drawQRCode(ContactData);	
+		drawQRCode(ContactData);
 	}
 
 	@Override
@@ -43,63 +40,61 @@ public class DisplayContactQR extends Activity{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	private void drawQRCode(String data){
+
+	private void drawQRCode(String data) {
 		Bitmap bm;
 		try {
-			bm = CreateQRCode(data);				
-			qrImage.setImageBitmap(bm);	
+			bm = CreateQRCode(data);
+			qrImage.setImageBitmap(bm);
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 	}
-	
-	private String generateContactInfo(){
-		String name,email,phoneNumber;
+
+	private String generateContactInfo() {
+		String name, email, phoneNumber;
 		String finalData;
-		
+
 		name = ContactInfo.getName(this.getApplication());
 		email = ContactInfo.getEmail(this);
 		phoneNumber = ContactInfo.requestCurrPhoneNum(this.getApplication());
-		
-		finalData = "Name:" + name + "," + "Phone:" + phoneNumber + "," + "Email:" + email;
+
+		finalData = "Name:" + name + "," + "Phone:" + phoneNumber + ","
+				+ "Email:" + email;
 		return finalData;
 	}
-	
 
-	
-	
-	private Bitmap CreateQRCode(String data) throws WriterException, IOException{
+	private Bitmap CreateQRCode(String data) throws WriterException,
+			IOException {
 		String qrCodeData = data;
 		String charset = "ISO-8859-1"; // or "UTF-8"
 		int qrCodewidth = 150;
 		int qrCodeheight = 150;
 		Config conf = Bitmap.Config.RGB_565;
-        Bitmap bmp = Bitmap.createBitmap(qrCodewidth, qrCodeheight, conf); 
-        
-        
+		Bitmap bmp = Bitmap.createBitmap(qrCodewidth, qrCodeheight, conf);
+
 		Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
 		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 		BitMatrix matrix = new MultiFormatWriter().encode(
-			        new String(qrCodeData.getBytes(charset), charset),
-			        BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
-		
-		try {      
-            for (int x = 0; x < qrCodewidth; x++) 
-            {
-                for (int y = 0; y < qrCodeheight; y++) {
-                    bmp.setPixel(x, y, matrix.get(x, y) ? 0xff000000 : 0xffffffff);
-                  }
-                }
-                        
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-		
+				new String(qrCodeData.getBytes(charset), charset),
+				BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
+
+		try {
+			for (int x = 0; x < qrCodewidth; x++) {
+				for (int y = 0; y < qrCodeheight; y++) {
+					bmp.setPixel(x, y, matrix.get(x, y) ? 0xff000000
+							: 0xffffffff);
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 		return bmp;
 	}
 

@@ -8,16 +8,21 @@ import net.sourceforge.zbar.SymbolSet;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract.PhoneLookup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ReceiveContact extends Activity {
 	
@@ -130,12 +135,9 @@ public class ReceiveContact extends Activity {
                     }
                     // sending string back to main activity
                     if(barcodeScanned == true){
-                    	Intent backToMain = new Intent();
-                    	Bundle backPack = new Bundle();
-                    	backPack.putString("qrDecodeString", QRResult);
-                    	backToMain.putExtras(backPack);
-                    	setResult(RESULT_OK,backToMain);
-                    	finish();
+                    	addContact( QRResult);
+                    	Intent i = new Intent("android.intent.action.MAIN");
+                    	startActivity(i);
                     }
                 }
             }
@@ -147,6 +149,78 @@ public class ReceiveContact extends Activity {
                 autoFocusHandler.postDelayed(doAutoFocus, 1000);
             }
         };
+    
+    private void addContact(String qrResult){
+    	//format of received String
+		//Name:Person's Name,Phone:999999999,Email:abc@example.com;
+		
+		// parsing the received String containing the contact info
+		String parsedName, parsedNumber, parsedEmail;
+		int index;
+		// parsing name
+		index = qrResult.indexOf("Name:");
+		index+=5;
+		parsedName ="";
+		while(qrResult.charAt(index) != ','){
+			parsedName += qrResult.charAt(index);
+			index++;
+		}
+		
+		//parsing  Phone number
+		index = qrResult.indexOf("Phone:");
+		index+=6;
+		parsedNumber = "";
+		while(qrResult.charAt(index) != ','){
+			parsedNumber += qrResult.charAt(index);
+			index++;
+		}
+		
+		//parsing email
+		index = qrResult.indexOf("Email:");
+		index+=6;
+		parsedEmail="";
+		while(index<qrResult.length()){
+			parsedEmail+=qrResult.charAt(index);
+			index++;
+		}			
+		
+		String toastString ="";
+		// adding contact info to phone and checking if contact already
+		// exists
+		if(!contactExists(parsedNumber)){
+			ContactInfo.createContact(parsedName, parsedNumber, null, null, parsedEmail, this.getApplication());
+			toastString = "Added " + parsedName + " to contact list";
+		}else{
+			toastString = "Contact " + parsedName +" with phone number:" 
+					+ parsedNumber + " already exist!";
+		}
+		
+		//creating Toast When Contact is created			
+		int duration = Toast.LENGTH_LONG;
+		Toast toast = Toast.makeText(getApplicationContext(), toastString, duration);
+		toast.show();		
+    	
+    }
+    
+ // checks if a specific contact already exists
+ 	private boolean contactExists(String phoneNumber){
+ 		Context context = getApplicationContext();
+ 		Uri lookupUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, 
+ 							Uri.encode(phoneNumber));
+ 		String[] mPhoneNumberProjection = { PhoneLookup._ID, PhoneLookup.NUMBER, PhoneLookup.DISPLAY_NAME };
+ 		Cursor cur = context.getContentResolver().query(lookupUri,mPhoneNumberProjection, null, null, null);
+ 		
+ 		try {
+ 			if (cur.moveToFirst()) {
+ 			  return true;
+ 			}
+ 			} finally {
+ 			if (cur != null)
+ 			cur.close();
+ 			}
+ 		return false;
+ 	}
+
 
 
 
