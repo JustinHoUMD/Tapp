@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;		
 		}		
 	}
-	
+	/*
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -130,7 +130,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			Toast toast = Toast.makeText(getApplicationContext(), toastString, duration);
 			toast.show();			
 		}
-	}
+	}*/
 	
 	// checks if a specific contact already exists
 	private boolean contactExists(String phoneNumber){
