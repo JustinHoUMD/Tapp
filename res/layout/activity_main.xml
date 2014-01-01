@@ -15,7 +15,8 @@
         android:layout_alignLeft="@+id/bDisplayContactQR"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="180dp"
-        android:text="Receive Contact QR" />
+        android:text="Receive Contact QR"
+        android:onClick="qrButtonsClick" />
 
     <Button
         android:id="@+id/bDisplayContactQR"
@@ -24,7 +25,8 @@
         android:layout_above="@+id/bReceiveContactQR"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="18dp"
-        android:text="Display Contact QR" />
+        android:text="Display Contact QR"
+        android:onClick="qrButtonsClick" />
 
     <com.facebook.widget.LoginButton
         android:id="@+id/authButton"

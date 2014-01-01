@@ -11,13 +11,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class MainActivity extends FragmentActivity implements OnClickListener {
+public class MainActivity extends FragmentActivity {
 
 	private static final String LOG_TAG = "debugger";
-
-	private Button getContactInfo;
-	private Button receiveContactInfo;
-
 	private MainFragment mainFragment;
 
 	@Override
@@ -39,12 +35,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 					.findFragmentById(android.R.id.content);
 		}
 
-		getContactInfo = (Button) findViewById(R.id.bDisplayContactQR);
-		receiveContactInfo = (Button) findViewById(R.id.bReceiveContactQR);
-
-		getContactInfo.setOnClickListener(this);
-		receiveContactInfo.setOnClickListener(this);
-
 	}
 
 	@Override
@@ -54,21 +44,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		return true;
 	}
 
-	@Override
-	public void onClick(View v) {
+	
+	public void qrButtonsClick(View v){
 		switch (v.getId()) {
-		case R.id.bDisplayContactQR:
-			// Intent encodeIntent = new Intent(this,DisplayContactQR.class);
+		case R.id.bDisplayContactQR:			
 			Intent encodeIntent = new Intent(
 					"android.intent.action.DISPLAYCONTACTQR");
 			startActivity(encodeIntent);
 			break;
 		case R.id.bReceiveContactQR:
-
-			Intent receiveIntent = new Intent(
-					"android.intent.action.RECEIVECONTACT");
-			// new Intent(this,ReceiveContact.class);
-			// startActivityForResult(receiveIntent, 0);
+			Intent receiveIntent = new Intent("android.intent.action.RECEIVECONTACT");			
 			startActivity(receiveIntent);
 			break;
 		}
