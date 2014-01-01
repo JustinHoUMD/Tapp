@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			startActivity(encodeIntent);
 			break;
 		case R.id.bReceiveContactQR:
-<<<<<<< HEAD
+
 			Intent receiveIntent = new Intent(
 					"android.intent.action.RECEIVECONTACT");
 			// new Intent(this,ReceiveContact.class);
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			startActivity(receiveIntent);
 			break;
 		}
-=======
+
 			Intent receiveIntent = new Intent(this,ReceiveContact.class);
 			startActivityForResult(receiveIntent, 0);
 			break;		
