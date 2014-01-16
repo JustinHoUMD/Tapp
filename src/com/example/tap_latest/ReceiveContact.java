@@ -30,17 +30,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract.PhoneLookup;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiveContact extends Activity {
+public class ReceiveContact extends Activity implements OnClickListener {
 	
 	private Camera mCamera;
     private CameraPreview mPreview;
-    private Handler autoFocusHandler;      
+    private Handler autoFocusHandler;   
+    private Button scanButton;
 
-    TextView scanText;
+  
     
 
     ImageScanner scanner;
@@ -71,24 +75,29 @@ public class ReceiveContact extends Activity {
         FrameLayout preview = (FrameLayout)findViewById(R.id.cameraPreview);
         preview.addView(mPreview);
 
-        scanText = (TextView)findViewById(R.id.scanText);
+        
 
-        /*
+        
         scanButton = (Button)findViewById(R.id.ScanButton);
-
-        scanButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    if (barcodeScanned) {
-                        barcodeScanned = false;
-                        scanText.setText("Scanning...");
-                        mCamera.setPreviewCallback(previewCb);
-                        mCamera.startPreview();
-                        previewing = true;
-                        mCamera.autoFocus(autoFocusCB);
-                    }
-                }
-            });
-         */
+        scanButton.setOnClickListener(this);
+      
+         
+    }
+    
+    @Override
+    public void onClick(View v) {
+    	switch(v.getId()){
+    	case R.id.ScanButton:
+    		  if (barcodeScanned) {
+                  barcodeScanned = false;                 
+                  mCamera.setPreviewCallback(previewCb);
+                  mCamera.startPreview();
+                  previewing = true;
+                  mCamera.autoFocus(autoFocusCB);
+              }
+    		break;
+    	}
+    	
     }
 
     public void onPause() {
@@ -238,6 +247,7 @@ public class ReceiveContact extends Activity {
 		                Session.getActiveSession(),
 		                parameters))
 		                .build();
+		                
 		requestsDialog.show();
 		
 		//facebook.dialog(this, "friends", parameters, this);
@@ -262,4 +272,6 @@ public class ReceiveContact extends Activity {
  			}
  		return false;
  	}
+
+
 }
