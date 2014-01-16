@@ -3,11 +3,18 @@ package com.example.tap_latest;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
+import com.facebook.FacebookException;
+
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
@@ -32,12 +39,13 @@ import android.provider.ContactsContract.PhoneLookup;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiveContact extends Activity implements OnClickListener {
+public class ReceiveContact extends Activity implements OnClickListener, DialogListener {
 	
 	private Camera mCamera;
     private CameraPreview mPreview;
@@ -169,20 +177,14 @@ public class ReceiveContact extends Activity implements OnClickListener {
             }
         };
     
-    private void addContact(String qrResult){
+ 
+	private void addContact(String qrResult){
     	//format of received String
 		//Name:Person's Name Phone:999999999 Email:abc@example.com FacebookId: id;
 		
 		// parsing the received String containing the contact info
 		String parsedName, parsedNumber, parsedEmail,parsedFacebookId;
-		/*
-		Scanner s = new Scanner(qrResult).useDelimiter("Name:(\\w+) Phone:(\\w+) Email:(\\w+)*@(\\w+)*.(\\w+) FacebookId:(\\w+)");
-		MatchResult result = s.match();
-		parsedName = result.group(1);
-		parsedNumber = result.group(2);
-		parsedEmail = result.group(3)+"@"+result.group(4)+"."+result.group(5);
-		parsedFacebookId = result.group(6);
-		*/
+
 		
 		int index;
 		// parsing name
@@ -233,24 +235,35 @@ public class ReceiveContact extends Activity implements OnClickListener {
 					+ parsedNumber + " already exist!,  FacebookId: " + parsedFacebookId;
 		}
 		
-		//creating Toast When Contact is created			
+					
 		int duration = Toast.LENGTH_LONG;
 		Toast toast = Toast.makeText(getApplicationContext(), toastString, duration);
 		toast.show();		
 		
 		
-		
+		/*
 		Bundle parameters = new Bundle();
 		parameters.putString("id", parsedFacebookId);
-		WebDialog requestsDialog = (
-		        new WebDialog.RequestsDialogBuilder(this,
-		                Session.getActiveSession(),
-		                parameters))
-		                .build();
-		                
-		requestsDialog.show();
-		
+		Facebook f = new Facebook("1440481899501016"); 
+		f.dialog(this, "friends", parameters, this);		
 		//facebook.dialog(this, "friends", parameters, this);
+		 * 
+		 */
+		
+		 //Intent facebookIntent = new Intent("android.intent.action.VIEW",Uri.parse("https://www.facebook.com/"+parsedFacebookId));
+		 //startActivity(facebookIntent);
+		 WebView webview = new WebView(this);
+		 setContentView(webview);
+		 webview.loadUrl("http://www.facebook.com/"+parsedFacebookId);
+		 
+		 // works until the friend reqeust is sent
+		 /*
+		 webview.loadUrl("http://www.facebook.com/dialog/friends/?"+
+				  "id=" + parsedFacebookId + "&"+
+				  "app_id=1440481899501016&"+
+				  "redirect_uri=https://www.facebook.com/connect/login_success.html");
+		*/
+		
     	
     }
     
@@ -273,5 +286,28 @@ public class ReceiveContact extends Activity implements OnClickListener {
  		return false;
  	}
 
+	@Override
+	public void onComplete(Bundle values) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onFacebookError(FacebookError e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onError(DialogError e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onCancel() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -35,10 +35,8 @@ public class DisplayContactQR extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_qr);
-
-		qrImage = (ImageView) findViewById(R.id.ivQRcode);
-		ContactData = generateContactInfo();
-		drawQRCode(ContactData);
+		makeMeRequest(Session.getActiveSession()); 
+		qrImage = (ImageView) findViewById(R.id.ivQRcode);	
 	}
 
 	@Override
@@ -71,11 +69,13 @@ public class DisplayContactQR extends Activity {
 		phoneNumber = ContactInfo.requestCurrPhoneNum(this.getApplication());
 		
 		//get facebook ID
-		makeMeRequest(Session.getActiveSession()); 
+		//makeMeRequest(Session.getActiveSession()); 
 		Log.d("Debug", "Facebook ID: "+ facebookId);
 
 		finalData = "Name:" + name + ",Phone:" + phoneNumber
 				+ ",Email:" + email + ",FacebookId:" + facebookId;
+		Log.d("Debug", finalData);
+
 		return finalData;
 	}
 
@@ -119,7 +119,9 @@ public class DisplayContactQR extends Activity {
 	            if (session == Session.getActiveSession()) {
 	                if (user != null) {
 	                    facebookId = user.getId(); 
-	                    Log.i(LOG_TAG, "Facebook ID: "+facebookId);
+	                    Log.i(LOG_TAG, "Facebook ID QR Generate code: "+facebookId);
+	                    ContactData = generateContactInfo();
+	            		drawQRCode(ContactData);
 	                }
 	            }
 	            if (response.getError() != null) {
@@ -127,7 +129,8 @@ public class DisplayContactQR extends Activity {
 	            }
 	        }
 	    });
-	    request.executeAsync();
+	   request.executeAsync();
+	   // request.executeAndWait();
 	} 
 
 }
