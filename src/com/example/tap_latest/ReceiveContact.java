@@ -227,10 +227,10 @@ public class ReceiveContact extends Activity implements OnClickListener {
 		// exists
 		if(!contactExists(parsedNumber)){
 			ContactInfo.createContact(parsedName, parsedNumber, null, null, parsedEmail, this.getApplication());
-			toastString = "Added " + parsedName + " to contact list";
+			toastString = "Added " + parsedName + " to contact list, FacebookId: " + parsedFacebookId;
 		}else{
 			toastString = "Contact " + parsedName +" with phone number:" 
-					+ parsedNumber + " already exist!";
+					+ parsedNumber + " already exist!,  FacebookId: " + parsedFacebookId;
 		}
 		
 		//creating Toast When Contact is created			
