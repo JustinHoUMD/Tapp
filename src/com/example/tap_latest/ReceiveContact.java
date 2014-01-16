@@ -1,5 +1,10 @@
 package com.example.tap_latest;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.ImageScanner;
@@ -20,6 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract.PhoneLookup;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +35,8 @@ public class ReceiveContact extends Activity {
 	private Camera mCamera;
     private CameraPreview mPreview;
     private Handler autoFocusHandler;
+    private String facebookId; 
+    private static final String LOG_TAG = "debugger";
 
     TextView scanText;
     
@@ -199,6 +207,12 @@ public class ReceiveContact extends Activity {
 		int duration = Toast.LENGTH_LONG;
 		Toast toast = Toast.makeText(getApplicationContext(), toastString, duration);
 		toast.show();		
+		
+		
+		makeMeRequest(Session.getActiveSession()); 
+		Bundle parameters = new Bundle();
+		parameters.putString("id", facebookId);
+		facebook.dialog(this, "friends", parameters, this);
     	
     }
     
@@ -222,6 +236,26 @@ public class ReceiveContact extends Activity {
  	}
 
 
+ 	private void makeMeRequest(final Session session) {
+	    Request request = Request.newMeRequest(session, 
+	            new Request.GraphUserCallback() {
+
+	        @Override
+	        public void onCompleted(GraphUser user, Response response) {
+	            // If the response is successful
+	            if (session == Session.getActiveSession()) {
+	                if (user != null) {
+	                    facebookId = user.getId(); 
+	                    Log.i(LOG_TAG, "Facebook ID: "+facebookId);
+	                }
+	            }
+	            if (response.getError() != null) {
+	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
+	            }
+	        }
+	    });
+	    request.executeAsync();
+	} 
 
 
 }
