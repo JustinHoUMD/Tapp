@@ -166,12 +166,52 @@ public class ReceiveContact extends Activity {
 		
 		// parsing the received String containing the contact info
 		String parsedName, parsedNumber, parsedEmail,parsedFacebookId;
+		/*
 		Scanner s = new Scanner(qrResult).useDelimiter("Name:(\\w+) Phone:(\\w+) Email:(\\w+)*@(\\w+)*.(\\w+) FacebookId:(\\w+)");
 		MatchResult result = s.match();
 		parsedName = result.group(1);
 		parsedNumber = result.group(2);
 		parsedEmail = result.group(3)+"@"+result.group(4)+"."+result.group(5);
 		parsedFacebookId = result.group(6);
+		*/
+		
+		int index;
+		// parsing name
+		index = qrResult.indexOf("Name:");
+		index+=5;
+		parsedName ="";
+		while(qrResult.charAt(index) != ','){
+			parsedName += qrResult.charAt(index);
+			index++;
+		}
+		
+		//parsing  Phone number
+		index = qrResult.indexOf("Phone:");
+		index+=6;
+		parsedNumber = "";
+		while(qrResult.charAt(index) != ','){
+			parsedNumber += qrResult.charAt(index);
+			index++;
+		}
+		
+		//parsing email
+		index = qrResult.indexOf("Email:");
+		index+=6;
+		parsedEmail="";
+		while(qrResult.charAt(index) != ','){
+			parsedEmail+=qrResult.charAt(index);
+			index++;
+		}	
+		
+		index = qrResult.indexOf("FacebookId:");
+		index+= 11;
+		parsedFacebookId="";
+		while(index<qrResult.length()){
+			parsedFacebookId += qrResult.charAt(index);
+			index++;
+		}
+		
+		
 		
 		String toastString ="";
 		// adding contact info to phone and checking if contact already
@@ -222,9 +262,4 @@ public class ReceiveContact extends Activity {
  			}
  		return false;
  	}
-
-
- 
-
-
 }
