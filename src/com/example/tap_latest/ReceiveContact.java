@@ -1,5 +1,8 @@
 package com.example.tap_latest;
 
+import java.util.Scanner;
+import java.util.regex.MatchResult;
+
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -159,47 +162,16 @@ public class ReceiveContact extends Activity {
     
     private void addContact(String qrResult){
     	//format of received String
-		//Name:Person's Name,Phone:999999999,Email:abc@example.com;
+		//Name:Person's Name Phone:999999999 Email:abc@example.com FacebookId: id;
 		
 		// parsing the received String containing the contact info
 		String parsedName, parsedNumber, parsedEmail,parsedFacebookId;
-		int index;
-		// parsing name
-		index = qrResult.indexOf("Name:");
-		index+=5;
-		parsedName ="";
-		while(qrResult.charAt(index) != ','){
-			parsedName += qrResult.charAt(index);
-			index++;
-		}
-		
-		//parsing  Phone number
-		index = qrResult.indexOf("Phone:");
-		index+=6;
-		parsedNumber = "";
-		while(qrResult.charAt(index) != ','){
-			parsedNumber += qrResult.charAt(index);
-			index++;
-		}
-		
-		//parsing email
-		index = qrResult.indexOf("Email:");
-		index+=6;
-		parsedEmail="";
-		while(qrResult.charAt(index) != ','){
-			parsedEmail+=qrResult.charAt(index);
-			index++;
-		}
-		
-		//parsing facebook Id
-		index = qrResult.indexOf("FacebookId:");
-		index += 11;
-		parsedFacebookId = "";
-		while(index <qrResult.length() ){
-			parsedFacebookId+=qrResult.charAt(index);
-			index++;
-		}
-		
+		Scanner s = new Scanner(qrResult).useDelimiter("Name:(\\w+),Phone:(\\w+),Email:(\\w+),FacebookId:,(\\w+)");
+		MatchResult result = s.match();
+		parsedName = result.group(1);
+		parsedNumber = result.group(2);
+		parsedEmail = result.group(3)+"@"+result.group(4)+"."+result.group(5);
+		parsedFacebookId = result.group(6);
 		
 		String toastString ="";
 		// adding contact info to phone and checking if contact already
