@@ -1,9 +1,12 @@
 package com.example.tap_latest;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
 import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
 import android.support.v4.app.Fragment;
@@ -18,6 +21,7 @@ public class MainFragment extends Fragment {
 	
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
+	private static final String LOG_TAG = "debugger";
 	
 	
 	private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -52,6 +56,7 @@ public class MainFragment extends Fragment {
 	    } else if (state.isClosed()) {
 	        Log.i(TAG, "Logged out...");
 	    }
+	    makeMeRequest(Session.getActiveSession()); 
 	}
 	
 	@Override
@@ -89,5 +94,26 @@ public class MainFragment extends Fragment {
 	    super.onSaveInstanceState(outState);
 	    uiHelper.onSaveInstanceState(outState);
 	}
+	
+	private void makeMeRequest(final Session session) {
+	    Request request = Request.newMeRequest(session, 
+	            new Request.GraphUserCallback() {
+
+	        @Override
+	        public void onCompleted(GraphUser user, Response response) {
+	            // If the response is successful
+	            if (session == Session.getActiveSession()) {
+	                if (user != null) {
+	                    String facebookId = user.getId();
+	                    Log.i(LOG_TAG, "Facebook ID: "+facebookId);
+	                }
+	            }
+	            if (response.getError() != null) {
+	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
+	            }
+	        }
+	    });
+	    request.executeAsync();
+	} 
 
 }
