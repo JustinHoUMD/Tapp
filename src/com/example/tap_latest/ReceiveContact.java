@@ -166,7 +166,7 @@ public class ReceiveContact extends Activity {
 		
 		// parsing the received String containing the contact info
 		String parsedName, parsedNumber, parsedEmail,parsedFacebookId;
-		Scanner s = new Scanner(qrResult).useDelimiter("Name:(\\w+),Phone:(\\w+),Email:(\\w+),FacebookId:,(\\w+)");
+		Scanner s = new Scanner(qrResult).useDelimiter("Name:(\\w+) Phone:(\\w+) Email:(\\w+)*@(\\w+)*.(\\w+) FacebookId:(\\w+)");
 		MatchResult result = s.match();
 		parsedName = result.group(1);
 		parsedNumber = result.group(2);
