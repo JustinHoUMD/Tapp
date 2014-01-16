@@ -222,6 +222,7 @@ containing a value of this type.
         public static final int tap_logo=0x7f020022;
     }
     public static final class id {
+        public static final int ScanButton=0x7f04001f;
         public static final int action_settings=0x7f040020;
         public static final int authButton=0x7f040005;
         public static final int bDisplayContactQR=0x7f040004;
@@ -252,7 +253,6 @@ containing a value of this type.
         public static final int large=0x7f040002;
         public static final int normal=0x7f040001;
         public static final int picker_subtitle=0x7f040016;
-        public static final int scanText=0x7f04001f;
         public static final int small=0x7f040000;
         public static final int textView1=0x7f04001d;
     }

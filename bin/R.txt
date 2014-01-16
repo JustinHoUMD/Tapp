@@ -75,6 +75,7 @@ int drawable com_facebook_usersettingsfragment_background_gradient 0x7f02001f
 int drawable ic_launcher 0x7f020020
 int drawable qr_image 0x7f020021
 int drawable tap_logo 0x7f020022
+int id ScanButton 0x7f04001f
 int id action_settings 0x7f040020
 int id authButton 0x7f040005
 int id bDisplayContactQR 0x7f040004
@@ -105,7 +106,6 @@ int id ivQRcode 0x7f04001c
 int id large 0x7f040002
 int id normal 0x7f040001
 int id picker_subtitle 0x7f040016
-int id scanText 0x7f04001f
 int id small 0x7f040000
 int id textView1 0x7f04001d
 int layout activity_main 0x7f030000

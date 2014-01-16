@@ -72,6 +72,7 @@ public class DisplayContactQR extends Activity {
 		
 		//get facebook ID
 		makeMeRequest(Session.getActiveSession()); 
+		Log.d("Debug", "Facebook ID: "+ facebookId);
 
 		finalData = "Name:" + name + ",Phone:" + phoneNumber
 				+ ",Email:" + email + ",FacebookId:" + facebookId;
