@@ -4,6 +4,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.WebDialog;
 
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
@@ -212,7 +213,14 @@ public class ReceiveContact extends Activity {
 		makeMeRequest(Session.getActiveSession()); 
 		Bundle parameters = new Bundle();
 		parameters.putString("id", facebookId);
-		facebook.dialog(this, "friends", parameters, this);
+		WebDialog requestsDialog = (
+		        new WebDialog.RequestsDialogBuilder(this,
+		                Session.getActiveSession(),
+		                parameters))
+		                .build();
+		        requestsDialog.show();
+		
+		//facebook.dialog(this, "friends", parameters, this);
     	
     }
     
