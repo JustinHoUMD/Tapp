@@ -33,6 +33,7 @@ public class MainActivity extends FragmentActivity {
 			// Or set the fragment from restored state info
 			mainFragment = (MainFragment) getSupportFragmentManager()
 					.findFragmentById(android.R.id.content);
+			
 		}
 
 	}
