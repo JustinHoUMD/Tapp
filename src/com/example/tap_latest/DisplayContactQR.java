@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -16,6 +20,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 
@@ -23,6 +28,8 @@ public class DisplayContactQR extends Activity {
 
 	private ImageView qrImage;
 	private String ContactData;
+    private String facebookId; 
+    private static final String LOG_TAG = "debugger";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +69,12 @@ public class DisplayContactQR extends Activity {
 		name = ContactInfo.getName(this.getApplication());
 		email = ContactInfo.getEmail(this);
 		phoneNumber = ContactInfo.requestCurrPhoneNum(this.getApplication());
+		
+		//get facebook ID
+		makeMeRequest(Session.getActiveSession()); 
 
 		finalData = "Name:" + name + "," + "Phone:" + phoneNumber + ","
-				+ "Email:" + email;
+				+ "Email:" + email + "," + "FacebookId:" + facebookId;
 		return finalData;
 	}
 
@@ -97,5 +107,26 @@ public class DisplayContactQR extends Activity {
 
 		return bmp;
 	}
+	
+	private void makeMeRequest(final Session session) {
+	    Request request = Request.newMeRequest(session, 
+	            new Request.GraphUserCallback() {
+
+	        @Override
+	        public void onCompleted(GraphUser user, Response response) {
+	            // If the response is successful
+	            if (session == Session.getActiveSession()) {
+	                if (user != null) {
+	                    facebookId = user.getId(); 
+	                    Log.i(LOG_TAG, "Facebook ID: "+facebookId);
+	                }
+	            }
+	            if (response.getError() != null) {
+	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
+	            }
+	        }
+	    });
+	    request.executeAsync();
+	} 
 
 }

@@ -35,9 +35,7 @@ public class ReceiveContact extends Activity {
 	
 	private Camera mCamera;
     private CameraPreview mPreview;
-    private Handler autoFocusHandler;
-    private String facebookId; 
-    private static final String LOG_TAG = "debugger";
+    private Handler autoFocusHandler;      
 
     TextView scanText;
     
@@ -87,7 +85,7 @@ public class ReceiveContact extends Activity {
                     }
                 }
             });
-            */
+         */
     }
 
     public void onPause() {
@@ -145,8 +143,8 @@ public class ReceiveContact extends Activity {
                     // sending string back to main activity
                     if(barcodeScanned == true){
                     	addContact( QRResult);
-                    	Intent i = new Intent("android.intent.action.MAIN");
-                    	startActivity(i);
+                    	//Intent i = new Intent("android.intent.action.MAIN");
+                    	//startActivity(i);
                     }
                 }
             }
@@ -164,7 +162,7 @@ public class ReceiveContact extends Activity {
 		//Name:Person's Name,Phone:999999999,Email:abc@example.com;
 		
 		// parsing the received String containing the contact info
-		String parsedName, parsedNumber, parsedEmail;
+		String parsedName, parsedNumber, parsedEmail,parsedFacebookId;
 		int index;
 		// parsing name
 		index = qrResult.indexOf("Name:");
@@ -188,10 +186,20 @@ public class ReceiveContact extends Activity {
 		index = qrResult.indexOf("Email:");
 		index+=6;
 		parsedEmail="";
-		while(index<qrResult.length()){
+		while(qrResult.charAt(index) != ','){
 			parsedEmail+=qrResult.charAt(index);
 			index++;
-		}			
+		}
+		
+		//parsing facebook Id
+		index = qrResult.indexOf("FacebookId:");
+		index += 11;
+		parsedFacebookId = "";
+		while(index <qrResult.length() ){
+			parsedFacebookId+=qrResult.charAt(index);
+			index++;
+		}
+		
 		
 		String toastString ="";
 		// adding contact info to phone and checking if contact already
@@ -210,15 +218,15 @@ public class ReceiveContact extends Activity {
 		toast.show();		
 		
 		
-		makeMeRequest(Session.getActiveSession()); 
+		
 		Bundle parameters = new Bundle();
-		parameters.putString("id", facebookId);
+		parameters.putString("id", parsedFacebookId);
 		WebDialog requestsDialog = (
 		        new WebDialog.RequestsDialogBuilder(this,
 		                Session.getActiveSession(),
 		                parameters))
 		                .build();
-		        requestsDialog.show();
+		requestsDialog.show();
 		
 		//facebook.dialog(this, "friends", parameters, this);
     	
@@ -244,26 +252,7 @@ public class ReceiveContact extends Activity {
  	}
 
 
- 	private void makeMeRequest(final Session session) {
-	    Request request = Request.newMeRequest(session, 
-	            new Request.GraphUserCallback() {
-
-	        @Override
-	        public void onCompleted(GraphUser user, Response response) {
-	            // If the response is successful
-	            if (session == Session.getActiveSession()) {
-	                if (user != null) {
-	                    facebookId = user.getId(); 
-	                    Log.i(LOG_TAG, "Facebook ID: "+facebookId);
-	                }
-	            }
-	            if (response.getError() != null) {
-	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
-	            }
-	        }
-	    });
-	    request.executeAsync();
-	} 
+ 
 
 
 }
