@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/backgroundcolor"
     tools:context=".MainActivity" >
 
     <Button
@@ -35,5 +36,14 @@
         android:layout_alignTop="@+id/bReceiveContactQR"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="108dp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="500dp"
+        android:layout_height="250dp"
+        android:layout_above="@+id/bDisplayContactQR"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="37dp"
+        android:src="@drawable/tap_logo" />
 
 </RelativeLayout>
