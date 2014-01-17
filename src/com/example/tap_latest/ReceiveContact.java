@@ -1,5 +1,7 @@
 package com.example.tap_latest;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
@@ -15,6 +17,12 @@ import com.facebook.android.FacebookError;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
@@ -24,7 +32,9 @@ import net.sourceforge.zbar.SymbolSet;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -45,20 +55,22 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiveContact extends Activity implements OnClickListener, DialogListener {
+public class ReceiveContact extends Activity implements OnClickListener{
 	
 	private Camera mCamera;
     private CameraPreview mPreview;
     private Handler autoFocusHandler;   
     private Button scanButton;
 
-  
+    private static final String LOG_TAG = "debugger";
     
 
     ImageScanner scanner;
 
     private boolean barcodeScanned = false;
     private boolean previewing = true;
+    private String facebookId; 
+    private String parsedFacebookId; 
 
     static {
         System.loadLibrary("iconv");
@@ -88,6 +100,8 @@ public class ReceiveContact extends Activity implements OnClickListener, DialogL
         
         scanButton = (Button)findViewById(R.id.ScanButton);
         scanButton.setOnClickListener(this);
+        
+        Parse.initialize(this, "BDODZz6eR9mhRqc1R4Z6Jvf3IS17tW4nQGxSfMqm", "TTPu2E4r953VnfGqARboNOEB2czPegLsmS6YkFgU");
       
          
     }
@@ -183,7 +197,7 @@ public class ReceiveContact extends Activity implements OnClickListener, DialogL
 		//Name:Person's Name Phone:999999999 Email:abc@example.com FacebookId: id;
 		
 		// parsing the received String containing the contact info
-		String parsedName, parsedNumber, parsedEmail,parsedFacebookId;
+		String parsedName, parsedNumber, parsedEmail;
 
 		
 		int index;
@@ -228,6 +242,12 @@ public class ReceiveContact extends Activity implements OnClickListener, DialogL
 		// adding contact info to phone and checking if contact already
 		// exists
 		if(!contactExists(parsedNumber)){
+			
+			//get facebook ID
+			makeMeRequest(Session.getActiveSession()); 
+			
+			
+			
 			ContactInfo.createContact(parsedName, parsedNumber, null, null, parsedEmail, this.getApplication());
 			toastString = "Added " + parsedName + " to contact list, FacebookId: " + parsedFacebookId;
 		}else{
@@ -252,9 +272,8 @@ public class ReceiveContact extends Activity implements OnClickListener, DialogL
 		
 		 //Intent facebookIntent = new Intent("android.intent.action.VIEW",Uri.parse("https://www.facebook.com/"+parsedFacebookId));
 		 //startActivity(facebookIntent);
-		 WebView webview = new WebView(this);
-		 setContentView(webview);
-		 webview.loadUrl("http://www.facebook.com/"+parsedFacebookId);
+		
+		showFBDialog(parsedFacebookId,parsedName);
 		 
 		 // works until the friend reqeust is sent
 		 /*
@@ -286,28 +305,77 @@ public class ReceiveContact extends Activity implements OnClickListener, DialogL
  		return false;
  	}
 
-	@Override
-	public void onComplete(Bundle values) {
-		// TODO Auto-generated method stub
-		
-	}
+ 	private void makeMeRequest(final Session session) {
+	    Request request = Request.newMeRequest(session, 
+	            new Request.GraphUserCallback() {
 
-	@Override
-	public void onFacebookError(FacebookError e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onError(DialogError e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onCancel() {
-		// TODO Auto-generated method stub
-		
-	}
+	        @Override
+	        public void onCompleted(GraphUser user, Response response) {
+	            // If the response is successful
+	            if (session == Session.getActiveSession()) {
+	                if (user != null) {
+	                    facebookId = user.getId(); 
+	                    Log.i(LOG_TAG, "Facebook ID2: "+facebookId);
+	                    ParseQuery<ParseObject> query = ParseQuery.getQuery("MeetCount");
+	        			query.whereEqualTo("FacebookID", facebookId);
+	        			query.getFirstInBackground(new GetCallback<ParseObject>() {
+	        			  public void done(ParseObject object, ParseException e) {
+	        			    if (object == null) {
+	        			      ParseObject newPerson = new ParseObject("MeetCount"); 
+	        			      newPerson.put("FacebookID", facebookId); 
+	        			      newPerson.put("numberMet", 1); 
+	        			      newPerson.saveInBackground();
+	        			    } else {
+	        			      //already exists 
+	        			    	object.increment("numberMet");
+	        			    	object.saveInBackground();
+	        			    }
+	        			  }
+	        			});
+	        			
+	        			ParseQuery<ParseObject> query2 = ParseQuery.getQuery("MeetCount");
+	        			query2.whereEqualTo("FacebookID", parsedFacebookId);
+	        			query2.getFirstInBackground(new GetCallback<ParseObject>() {
+	        			  public void done(ParseObject object, ParseException e) {
+	        			    if (object == null) {
+	        			      ParseObject newPerson = new ParseObject("MeetCount"); 
+	        			      newPerson.put("FacebookID", parsedFacebookId); 
+	        			      newPerson.put("numberMet", 1); 
+	        			      newPerson.saveInBackground();
+	        			    } else {
+	        			      //already exists 
+	        			    	object.increment("numberMet");
+	        			    	object.saveInBackground();
+	        			    }
+	        			  }
+	        			});
+	                }
+	            }
+	            if (response.getError() != null) {
+	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
+	            }
+	        }
+	    });
+	    request.executeAsync();
+	} 
+ 	
+ 	private void showFBDialog(final String facebookId,String name){
+ 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+ 	   builder.setMessage("Do you want to visit " + name + "'s facebook page.")
+       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+        	WebView webview = new WebView(getApplicationContext());
+      		 setContentView(webview);
+      		 webview.loadUrl("http://www.facebook.com/"+facebookId);
+           }
+       })
+       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+               
+           }
+       });
+ 	  AlertDialog dialog = builder.create();
+ 	  dialog.show();
+ 	}
 
 }

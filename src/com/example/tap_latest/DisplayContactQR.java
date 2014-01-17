@@ -16,6 +16,9 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -126,11 +129,27 @@ public class DisplayContactQR extends Activity {
 	            }
 	            if (response.getError() != null) {
 	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
+	            	displayErrorDialog();
 	            }
 	        }
 	    });
 	   request.executeAsync();
 	   // request.executeAndWait();
-	} 
+	}
+	
+	private void displayErrorDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	 	   builder.setMessage("You are not logged into facebook. Please go back and log in")
+	       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+	        	   startActivity(intent);
+	           }
+	       });
+	       
+	      
+	 	  AlertDialog dialog = builder.create();
+	 	  dialog.show();
+	}
 
 }
