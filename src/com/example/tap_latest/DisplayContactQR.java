@@ -28,18 +28,21 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 public class DisplayContactQR extends Activity {
-
+	
 	private ImageView qrImage;
 	private String ContactData;
     private String facebookId; 
     private static final String LOG_TAG = "debugger";
-
+    private static final String SUCCESS_MESSAGE = "SUCCESS";
+    private static final String FAIL_MESSAGE = "FAIL";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_qr);
+		qrImage = (ImageView) findViewById(R.id.ivQRcode);
+		
 		makeMeRequest(Session.getActiveSession()); 
-		qrImage = (ImageView) findViewById(R.id.ivQRcode);	
+			
 	}
 
 	@Override
@@ -63,7 +66,7 @@ public class DisplayContactQR extends Activity {
 		}
 	}
 
-	private String generateContactInfo() {
+	private String generateContactInfo(String facebookStatus) {
 		String name, email, phoneNumber;
 		String finalData;
 
@@ -71,12 +74,15 @@ public class DisplayContactQR extends Activity {
 		email = ContactInfo.getEmail(this);
 		phoneNumber = ContactInfo.requestCurrPhoneNum(this.getApplication());
 		
-		//get facebook ID
-		//makeMeRequest(Session.getActiveSession()); 
+		
 		Log.d("Debug", "Facebook ID: "+ facebookId);
 
 		finalData = "Name:" + name + ",Phone:" + phoneNumber
 				+ ",Email:" + email + ",FacebookId:" + facebookId;
+		
+		finalData = "{\"name\" : " + "\"" + name + "\"" + ",\"phone\" : " + "\"" + phoneNumber + "\"" + 
+				",\"email\" : " + "\"" + email + "\"" + ",\"facebookId\" : " + "\"" + facebookId + "\"" + 
+				",\"loginStatus\" : " + "\"" + facebookStatus + "\"" + "}";
 		Log.d("Debug", finalData);
 
 		return finalData;
@@ -123,33 +129,36 @@ public class DisplayContactQR extends Activity {
 	                if (user != null) {
 	                    facebookId = user.getId(); 
 	                    Log.i(LOG_TAG, "Facebook ID QR Generate code: "+facebookId);
-	                    ContactData = generateContactInfo();
+	                    ContactData = generateContactInfo(SUCCESS_MESSAGE);
 	            		drawQRCode(ContactData);
 	                }
 	            }
 	            if (response.getError() != null) {
-	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");
-	            	displayErrorDialog();
+	            	ContactData = generateContactInfo(FAIL_MESSAGE);
+	           		drawQRCode(ContactData);
+	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");	            	     	
 	            }
 	        }
 	    });
 	   request.executeAsync();
 	   // request.executeAndWait();
-	}
+	} 
 	
 	private void displayErrorDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	 	   builder.setMessage("You are not logged into facebook. Please go back and log in")
-	       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+	 	   builder.setMessage("You are not logged into facebook.Click Cancel to go back or OK to proceed without sharing your facebook info")
+	       .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	        	   Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-	        	   startActivity(intent);
+	        	  ContactData = generateContactInfo(FAIL_MESSAGE);
+           		  drawQRCode(ContactData);
+	           }
+	       })
+	       .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	               
 	           }
 	       });
-	       
-	      
-	 	  AlertDialog dialog = builder.create();
-	 	  dialog.show();
 	}
 
 }
+	

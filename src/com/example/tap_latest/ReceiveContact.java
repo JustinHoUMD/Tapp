@@ -1,9 +1,7 @@
 package com.example.tap_latest;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.facebook.FacebookException;
 
@@ -17,6 +15,7 @@ import com.facebook.android.FacebookError;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
@@ -55,13 +54,16 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiveContact extends Activity implements OnClickListener{
+public class ReceiveContact extends Activity implements OnClickListener {
 	
 	private Camera mCamera;
     private CameraPreview mPreview;
     private Handler autoFocusHandler;   
     private Button scanButton;
-
+    private String facebookId; 
+    private String parsedFacebookId; 
+    private static final String SUCCESS_MESSAGE = "SUCCESS";
+    private static final String FAIL_MESSAGE = "FAIL";  
     private static final String LOG_TAG = "debugger";
     
 
@@ -69,8 +71,6 @@ public class ReceiveContact extends Activity implements OnClickListener{
 
     private boolean barcodeScanned = false;
     private boolean previewing = true;
-    private String facebookId; 
-    private String parsedFacebookId; 
 
     static {
         System.loadLibrary("iconv");
@@ -100,8 +100,6 @@ public class ReceiveContact extends Activity implements OnClickListener{
         
         scanButton = (Button)findViewById(R.id.ScanButton);
         scanButton.setOnClickListener(this);
-        
-        Parse.initialize(this, "BDODZz6eR9mhRqc1R4Z6Jvf3IS17tW4nQGxSfMqm", "TTPu2E4r953VnfGqARboNOEB2czPegLsmS6YkFgU");
       
          
     }
@@ -197,43 +195,21 @@ public class ReceiveContact extends Activity implements OnClickListener{
 		//Name:Person's Name Phone:999999999 Email:abc@example.com FacebookId: id;
 		
 		// parsing the received String containing the contact info
-		String parsedName, parsedNumber, parsedEmail;
+		String parsedName = "", parsedNumber = "", parsedEmail = "",parsedFacebookId = null;
 
 		
-		int index;
-		// parsing name
-		index = qrResult.indexOf("Name:");
-		index+=5;
-		parsedName ="";
-		while(qrResult.charAt(index) != ','){
-			parsedName += qrResult.charAt(index);
-			index++;
-		}
-		
-		//parsing  Phone number
-		index = qrResult.indexOf("Phone:");
-		index+=6;
-		parsedNumber = "";
-		while(qrResult.charAt(index) != ','){
-			parsedNumber += qrResult.charAt(index);
-			index++;
-		}
-		
-		//parsing email
-		index = qrResult.indexOf("Email:");
-		index+=6;
-		parsedEmail="";
-		while(qrResult.charAt(index) != ','){
-			parsedEmail+=qrResult.charAt(index);
-			index++;
-		}	
-		
-		index = qrResult.indexOf("FacebookId:");
-		index+= 11;
-		parsedFacebookId="";
-		while(index<qrResult.length()){
-			parsedFacebookId += qrResult.charAt(index);
-			index++;
+		try {
+			JSONObject jsonString = new JSONObject(qrResult);
+			parsedName = jsonString.getString("name");
+			parsedNumber = jsonString.getString("phone");
+			parsedEmail = jsonString.getString("email");
+			String status = jsonString.getString("loginStatus");
+			if(status.equals(SUCCESS_MESSAGE)){
+				parsedFacebookId = jsonString.getString("facebookId");
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		
@@ -241,18 +217,12 @@ public class ReceiveContact extends Activity implements OnClickListener{
 		String toastString ="";
 		// adding contact info to phone and checking if contact already
 		// exists
-		if(!contactExists(parsedNumber)){
-			
-			//get facebook ID
-			makeMeRequest(Session.getActiveSession()); 
-			
-			
-			
+		if(!contactExists(parsedNumber)){			
 			ContactInfo.createContact(parsedName, parsedNumber, null, null, parsedEmail, this.getApplication());
-			toastString = "Added " + parsedName + " to contact list, FacebookId: " + parsedFacebookId;
+			toastString = "Added " + parsedName + " to contact list";
 		}else{
 			toastString = "Contact " + parsedName +" with phone number:" 
-					+ parsedNumber + " already exist!,  FacebookId: " + parsedFacebookId;
+					+ parsedNumber + " already exists!";
 		}
 		
 					
@@ -260,30 +230,10 @@ public class ReceiveContact extends Activity implements OnClickListener{
 		Toast toast = Toast.makeText(getApplicationContext(), toastString, duration);
 		toast.show();		
 		
-		
-		/*
-		Bundle parameters = new Bundle();
-		parameters.putString("id", parsedFacebookId);
-		Facebook f = new Facebook("1440481899501016"); 
-		f.dialog(this, "friends", parameters, this);		
-		//facebook.dialog(this, "friends", parameters, this);
-		 * 
-		 */
-		
-		 //Intent facebookIntent = new Intent("android.intent.action.VIEW",Uri.parse("https://www.facebook.com/"+parsedFacebookId));
-		 //startActivity(facebookIntent);
-		
-		showFBDialog(parsedFacebookId,parsedName);
-		 
-		 // works until the friend reqeust is sent
-		 /*
-		 webview.loadUrl("http://www.facebook.com/dialog/friends/?"+
-				  "id=" + parsedFacebookId + "&"+
-				  "app_id=1440481899501016&"+
-				  "redirect_uri=https://www.facebook.com/connect/login_success.html");
-		*/
-		
-    	
+		if(parsedFacebookId != null){
+			makeMeRequest(Session.getActiveSession()); 
+			showFBDialog(parsedFacebookId, parsedName);
+		}    	
     }
     
  // checks if a specific contact already exists
@@ -304,7 +254,24 @@ public class ReceiveContact extends Activity implements OnClickListener{
  			}
  		return false;
  	}
-
+ 	
+ 	private void showFBDialog(final String facebookId,String name){
+ 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+ 	   builder.setMessage("Do you want to visit " + name + "'s facebook page.")
+       .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+        	 WebView webview = new WebView(getApplicationContext());
+      		 setContentView(webview);
+      		 webview.loadUrl("http://www.facebook.com/"+facebookId);
+           }
+       })
+       .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+               
+           }
+       });
+ 	}
+ 	
  	private void makeMeRequest(final Session session) {
 	    Request request = Request.newMeRequest(session, 
 	            new Request.GraphUserCallback() {
@@ -358,24 +325,4 @@ public class ReceiveContact extends Activity implements OnClickListener{
 	    });
 	    request.executeAsync();
 	} 
- 	
- 	private void showFBDialog(final String facebookId,String name){
- 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
- 	   builder.setMessage("Do you want to visit " + name + "'s facebook page.")
-       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-        	WebView webview = new WebView(getApplicationContext());
-      		 setContentView(webview);
-      		 webview.loadUrl("http://www.facebook.com/"+facebookId);
-           }
-       })
-       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-               
-           }
-       });
- 	  AlertDialog dialog = builder.create();
- 	  dialog.show();
- 	}
-
 }

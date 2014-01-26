@@ -307,6 +307,8 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_log_in_button=0x7f070008;
         public static final int com_facebook_usersettingsfragment_logged_in=0x7f070009;
         public static final int com_facebook_usersettingsfragment_not_logged_in=0x7f07000a;
+        public static final int dialog_cancel=0x7f07001e;
+        public static final int dialog_ok=0x7f07001d;
         public static final int hello_world=0x7f07001b;
     }
     public static final class style {
