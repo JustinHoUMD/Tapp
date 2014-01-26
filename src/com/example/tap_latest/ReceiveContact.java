@@ -60,7 +60,7 @@ public class ReceiveContact extends Activity implements OnClickListener {
     private CameraPreview mPreview;
     private Handler autoFocusHandler;   
     private Button scanButton;
-    private String facebookId; 
+    private String myFacebookId; 
     private String parsedFacebookId; 
     private static final String SUCCESS_MESSAGE = "SUCCESS";
     private static final String FAIL_MESSAGE = "FAIL";  
@@ -195,7 +195,7 @@ public class ReceiveContact extends Activity implements OnClickListener {
 		//Name:Person's Name Phone:999999999 Email:abc@example.com FacebookId: id;
 		
 		// parsing the received String containing the contact info
-		String parsedName = "", parsedNumber = "", parsedEmail = "",parsedFacebookId = null;
+		String parsedName = "", parsedNumber = "", parsedEmail = "";
 
 		
 		try {
@@ -281,15 +281,15 @@ public class ReceiveContact extends Activity implements OnClickListener {
 	            // If the response is successful
 	            if (session == Session.getActiveSession()) {
 	                if (user != null) {
-	                    facebookId = user.getId(); 
-	                    Log.i(LOG_TAG, "Facebook ID2: "+facebookId);
+	                    myFacebookId = user.getId(); 
+	                    Log.i(LOG_TAG, "Facebook ID2: "+myFacebookId );
 	                    ParseQuery<ParseObject> query = ParseQuery.getQuery("MeetCount");
-	        			query.whereEqualTo("FacebookID", facebookId);
+	        			query.whereEqualTo("FacebookID", myFacebookId );
 	        			query.getFirstInBackground(new GetCallback<ParseObject>() {
 	        			  public void done(ParseObject object, ParseException e) {
 	        			    if (object == null) {
 	        			      ParseObject newPerson = new ParseObject("MeetCount"); 
-	        			      newPerson.put("FacebookID", facebookId); 
+	        			      newPerson.put("FacebookID", myFacebookId ); 
 	        			      newPerson.put("numberMet", 1); 
 	        			      newPerson.saveInBackground();
 	        			    } else {
