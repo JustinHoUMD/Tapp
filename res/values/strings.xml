@@ -7,6 +7,8 @@
     <string name="app_id">1440481899501016</string>
     <string name = "dialog_ok">OK</string>
     <string name = "dialog_cancel">Cancel</string>
+    <string name = "qrCodeInstructions">Scan QR Code to get email and phone number</string>
+     <string name = "facebookQR">You have to log in to share your facebook!</string>
     <color name="backgroundcolor">#96a1ec</color>
 
 </resources>

@@ -75,12 +75,12 @@ int drawable com_facebook_usersettingsfragment_background_gradient 0x7f02001f
 int drawable ic_launcher 0x7f020020
 int drawable qr_image 0x7f020021
 int drawable tap_logo 0x7f020022
-int id ScanButton 0x7f04001f
-int id action_settings 0x7f040020
+int id ScanButton 0x7f040020
+int id action_settings 0x7f040021
 int id authButton 0x7f040005
 int id bDisplayContactQR 0x7f040004
 int id bReceiveContactQR 0x7f040003
-int id cameraPreview 0x7f04001e
+int id cameraPreview 0x7f04001f
 int id com_facebook_login_activity_progress_bar 0x7f040009
 int id com_facebook_picker_activity_circle 0x7f040008
 int id com_facebook_picker_checkbox 0x7f04000b
@@ -108,6 +108,7 @@ int id normal 0x7f040001
 int id picker_subtitle 0x7f040016
 int id small 0x7f040000
 int id textView1 0x7f04001d
+int id tvFacebookStatus 0x7f04001e
 int layout activity_main 0x7f030000
 int layout com_facebook_friendpickerfragment 0x7f030001
 int layout com_facebook_login_activity_layout 0x7f030002
@@ -156,7 +157,9 @@ int string com_facebook_usersettingsfragment_logged_in 0x7f070009
 int string com_facebook_usersettingsfragment_not_logged_in 0x7f07000a
 int string dialog_cancel 0x7f07001e
 int string dialog_ok 0x7f07001d
+int string facebookQR 0x7f070020
 int string hello_world 0x7f07001b
+int string qrCodeInstructions 0x7f07001f
 int style AppBaseTheme 0x7f080002
 int style AppTheme 0x7f080003
 int style com_facebook_loginview_default_style 0x7f080000

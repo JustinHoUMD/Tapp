@@ -23,7 +23,18 @@
          android:layout_height="wrap_content"
          android:layout_below="@+id/ivQRcode"
          android:layout_centerHorizontal="true"
-         android:text="Scan QR Code to get email and phone number"
+         android:layout_centerInParent="false"
+         android:text="@string/qrCodeInstructions"
+         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+     <TextView
+         android:id="@+id/tvFacebookStatus"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/textView1"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="16dp"
+         android:text="Fcaebook Login Status"
          android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

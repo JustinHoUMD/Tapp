@@ -26,10 +26,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class DisplayContactQR extends Activity {
 	
 	private ImageView qrImage;
+	private TextView facebookStatusTv;
 	private String ContactData;
     private String facebookId; 
     private static final String LOG_TAG = "debugger";
@@ -40,6 +42,7 @@ public class DisplayContactQR extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_qr);
 		qrImage = (ImageView) findViewById(R.id.ivQRcode);
+		facebookStatusTv = (TextView)findViewById(R.id.tvFacebookStatus);
 		
 		makeMeRequest(Session.getActiveSession()); 
 			
@@ -129,11 +132,14 @@ public class DisplayContactQR extends Activity {
 	                if (user != null) {
 	                    facebookId = user.getId(); 
 	                    Log.i(LOG_TAG, "Facebook ID QR Generate code: "+facebookId);
+	                    
+	                    facebookStatusTv.setText("Logged into facebook");
 	                    ContactData = generateContactInfo(SUCCESS_MESSAGE);
 	            		drawQRCode(ContactData);
 	                }
 	            }
 	            if (response.getError() != null) {
+	            	facebookStatusTv.setText("You have to log in to share your facebook!");
 	            	ContactData = generateContactInfo(FAIL_MESSAGE);
 	           		drawQRCode(ContactData);
 	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");	            	     	
