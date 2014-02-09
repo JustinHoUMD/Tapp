@@ -10,16 +10,16 @@
     android:background="@color/qr_disp_background"
      >
 
+
      <ImageView
          android:id="@+id/ivQRcode"
-         android:layout_width="200dp"
-         android:layout_height="200dp"
+         android:layout_width="225dp"
+         android:layout_height="225dp"
          android:layout_alignParentTop="true"
          android:layout_centerHorizontal="true"
          android:layout_marginTop="81dp"
          android:src="@drawable/qr_image"
-         android:background="@drawable/qr_background"
-          />
+         android:background="@drawable/qr_background"/>
 
      <TextView
          android:id="@+id/tvFacebookStatus"
@@ -27,8 +27,7 @@
          android:layout_height="wrap_content"
          android:layout_below="@+id/ivQRcode"
          android:layout_centerHorizontal="true"
-         android:layout_centerInParent="false"
-         android:layout_marginTop="16dp"
+         android:layout_marginTop="31dp"
          android:background="@drawable/logged_out"
          android:text="Not Logged In Facebook"
          android:textAppearance="?android:attr/textAppearanceMedium"

@@ -43,8 +43,7 @@ public class DisplayContactQR extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.display_qr);
 		qrImage = (ImageView) findViewById(R.id.ivQRcode);
-		facebookStatusTv = (TextView)findViewById(R.id.tvFacebookStatus);
-		
+		facebookStatusTv = (TextView)findViewById(R.id.tvFacebookStatus);		
 		makeMeRequest(Session.getActiveSession()); 
 			
 	}
@@ -60,7 +59,9 @@ public class DisplayContactQR extends Activity {
 		Bitmap bm;
 		try {
 			bm = CreateQRCode(data);
+			qrImage.setBackgroundResource(R.drawable.qr_background);
 			qrImage.setImageBitmap(bm);
+			
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,7 +142,7 @@ public class DisplayContactQR extends Activity {
 	                }
 	            }
 	            if (response.getError() != null) {
-	            	facebookStatusTv.setText("Not Logged Into Facebook");
+	            	facebookStatusTv.setText("Not Logged Into Facebook!!!");
 	            	facebookStatusTv.setBackgroundResource(R.drawable.logged_out);
 	            	ContactData = generateContactInfo(FAIL_MESSAGE);
 	           		drawQRCode(ContactData);
