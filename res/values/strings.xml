@@ -9,6 +9,7 @@
     <string name = "dialog_cancel">Cancel</string>
     <string name = "qrCodeInstructions">Scan QR Code to get email and phone number</string>
      <string name = "facebookQR">You have to log in to share your facebook!</string>
-    <color name="backgroundcolor">#96a1ec</color>
+    <color name="main_activity_background">#96a1ec</color>
+    <color name="qr_disp_background">#FFE852</color>
 
 </resources>

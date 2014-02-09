@@ -22,6 +22,7 @@ import android.content.Intent;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -131,15 +132,17 @@ public class DisplayContactQR extends Activity {
 	            if (session == Session.getActiveSession()) {
 	                if (user != null) {
 	                    facebookId = user.getId(); 
-	                    Log.i(LOG_TAG, "Facebook ID QR Generate code: "+facebookId);
+	                    Log.i(LOG_TAG, "Facebook ID QR Generate code: "+facebookId);	                    
+	                    facebookStatusTv.setText("Logged into facebook");                 
+	                    facebookStatusTv.setBackgroundResource(R.drawable.logged_in);
 	                    
-	                    facebookStatusTv.setText("Logged into facebook");
 	                    ContactData = generateContactInfo(SUCCESS_MESSAGE);
 	            		drawQRCode(ContactData);
 	                }
 	            }
 	            if (response.getError() != null) {
-	            	facebookStatusTv.setText("You have to log in to share your facebook!");
+	            	facebookStatusTv.setText("Not Logged Into Facebook");
+	            	facebookStatusTv.setBackgroundResource(R.drawable.logged_out);
 	            	ContactData = generateContactInfo(FAIL_MESSAGE);
 	           		drawQRCode(ContactData);
 	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");	            	     	

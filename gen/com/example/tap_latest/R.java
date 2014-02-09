@@ -151,7 +151,6 @@ containing a value of this type.
         public static final int title_text=0x7f010003;
     }
     public static final class color {
-        public static final int backgroundcolor=0x7f060007;
         public static final int com_facebook_blue=0x7f060002;
         public static final int com_facebook_loginview_text_color=0x7f060006;
         public static final int com_facebook_picker_search_bar_background=0x7f060000;
@@ -159,6 +158,8 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_connected_shadow_color=0x7f060004;
         public static final int com_facebook_usersettingsfragment_connected_text_color=0x7f060003;
         public static final int com_facebook_usersettingsfragment_not_connected_text_color=0x7f060005;
+        public static final int main_activity_background=0x7f060007;
+        public static final int qr_disp_background=0x7f060008;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -200,7 +201,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f02000d;
         public static final int com_facebook_loginbutton_silver=0x7f02000e;
         public static final int com_facebook_logo=0x7f02000f;
-        public static final int com_facebook_picker_default_separator_color=0x7f020023;
+        public static final int com_facebook_picker_default_separator_color=0x7f020027;
         public static final int com_facebook_picker_item_background=0x7f020010;
         public static final int com_facebook_picker_list_focused=0x7f020011;
         public static final int com_facebook_picker_list_longpressed=0x7f020012;
@@ -217,17 +218,21 @@ containing a value of this type.
         public static final int com_facebook_top_background=0x7f02001d;
         public static final int com_facebook_top_button=0x7f02001e;
         public static final int com_facebook_usersettingsfragment_background_gradient=0x7f02001f;
-        public static final int ic_launcher=0x7f020020;
-        public static final int qr_image=0x7f020021;
-        public static final int tap_logo=0x7f020022;
+        public static final int custom_button1=0x7f020020;
+        public static final int ic_launcher=0x7f020021;
+        public static final int logged_in=0x7f020022;
+        public static final int logged_out=0x7f020023;
+        public static final int qr_background=0x7f020024;
+        public static final int qr_image=0x7f020025;
+        public static final int tap_logo=0x7f020026;
     }
     public static final class id {
-        public static final int ScanButton=0x7f040020;
-        public static final int action_settings=0x7f040021;
+        public static final int ScanButton=0x7f04001f;
+        public static final int action_settings=0x7f040020;
         public static final int authButton=0x7f040005;
-        public static final int bDisplayContactQR=0x7f040004;
-        public static final int bReceiveContactQR=0x7f040003;
-        public static final int cameraPreview=0x7f04001f;
+        public static final int bDisplayContactQR=0x7f040003;
+        public static final int bReceiveContactQR=0x7f040004;
+        public static final int cameraPreview=0x7f04001e;
         public static final int com_facebook_login_activity_progress_bar=0x7f040009;
         public static final int com_facebook_picker_activity_circle=0x7f040008;
         public static final int com_facebook_picker_checkbox=0x7f04000b;
@@ -254,8 +259,7 @@ containing a value of this type.
         public static final int normal=0x7f040001;
         public static final int picker_subtitle=0x7f040016;
         public static final int small=0x7f040000;
-        public static final int textView1=0x7f04001d;
-        public static final int tvFacebookStatus=0x7f04001e;
+        public static final int tvFacebookStatus=0x7f04001d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
