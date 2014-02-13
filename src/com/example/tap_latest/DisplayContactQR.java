@@ -55,12 +55,15 @@ public class DisplayContactQR extends Activity {
 		return true;
 	}
 
-	private void drawQRCode(String data) {
+	private void drawQRCode(String data,int width,int height) {
 		Bitmap bm;
 		try {
-			bm = CreateQRCode(data);
+			bm = CreateQRCode(data,width,height);
 			qrImage.setBackgroundResource(R.drawable.qr_background);
 			qrImage.setImageBitmap(bm);
+			Log.d("IMAGE SIZE", "Width: " + qrImage.getMeasuredWidth() + " Height: " + qrImage.getMeasuredHeight());
+			
+			
 			
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block
@@ -93,12 +96,10 @@ public class DisplayContactQR extends Activity {
 		return finalData;
 	}
 
-	private Bitmap CreateQRCode(String data) throws WriterException,
+	private Bitmap CreateQRCode(String data,int qrCodewidth,int qrCodeheight) throws WriterException,
 			IOException {
 		String qrCodeData = data;
-		String charset = "ISO-8859-1"; // or "UTF-8"
-		int qrCodewidth = 150;
-		int qrCodeheight = 150;
+		String charset = "ISO-8859-1"; // or "UTF-8"		
 		Config conf = Bitmap.Config.RGB_565;
 		Bitmap bmp = Bitmap.createBitmap(qrCodewidth, qrCodeheight, conf);
 
@@ -138,14 +139,14 @@ public class DisplayContactQR extends Activity {
 	                    facebookStatusTv.setBackgroundResource(R.drawable.logged_in);
 	                    
 	                    ContactData = generateContactInfo(SUCCESS_MESSAGE);
-	            		drawQRCode(ContactData);
+	            		drawQRCode(ContactData,400,400);
 	                }
 	            }
 	            if (response.getError() != null) {
 	            	facebookStatusTv.setText("Not Logged Into Facebook!!!");
 	            	facebookStatusTv.setBackgroundResource(R.drawable.logged_out);
 	            	ContactData = generateContactInfo(FAIL_MESSAGE);
-	           		drawQRCode(ContactData);
+	           		drawQRCode(ContactData,300,300);
 	            	Log.i(LOG_TAG, "ERROR while getting Facebook ID");	            	     	
 	            }
 	        }
@@ -160,7 +161,7 @@ public class DisplayContactQR extends Activity {
 	       .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	        	  ContactData = generateContactInfo(FAIL_MESSAGE);
-           		  drawQRCode(ContactData);
+           		  drawQRCode(ContactData,300,300);
 	           }
 	       })
 	       .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {

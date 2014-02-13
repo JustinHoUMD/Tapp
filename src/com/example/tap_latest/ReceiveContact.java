@@ -46,9 +46,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract.PhoneLookup;
 import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -119,10 +124,16 @@ public class ReceiveContact extends Activity implements OnClickListener {
     	}
     	
     }
-
+    @Override
     public void onPause() {
         super.onPause();
         releaseCamera();
+    }
+    
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	restoreCamera();
     }
 
     /** A safe way to get an instance of the Camera object. */
@@ -142,6 +153,17 @@ public class ReceiveContact extends Activity implements OnClickListener {
             mCamera.release();
             mCamera = null;
         }
+    }
+    
+    private void restoreCamera(){
+    	if (mCamera == null) {
+   		 mCamera = getCameraInstance(); // Local method to handle camera init
+   		 previewing = true;
+   		 mPreview = new CameraPreview(this, mCamera, previewCb, autoFocusCB);
+   	     FrameLayout preview = (FrameLayout)findViewById(R.id.cameraPreview);
+   	     preview.addView(mPreview);
+       }      
+    	
     }
 
     private Runnable doAutoFocus = new Runnable() {
@@ -172,11 +194,10 @@ public class ReceiveContact extends Activity implements OnClickListener {
                         QRResult += sym.getData();
                         barcodeScanned = true;
                     }
-                    // sending string back to main activity
+                   
                     if(barcodeScanned == true){
                     	addContact( QRResult);
-                    	//Intent i = new Intent("android.intent.action.MAIN");
-                    	//startActivity(i);
+                    	
                     }
                 }
             }
@@ -201,11 +222,14 @@ public class ReceiveContact extends Activity implements OnClickListener {
 		try {
 			JSONObject jsonString = new JSONObject(qrResult);
 			parsedName = jsonString.getString("name");
+			Log.d("Name",parsedName);
 			parsedNumber = jsonString.getString("phone");
 			parsedEmail = jsonString.getString("email");
 			String status = jsonString.getString("loginStatus");
+			Log.d("FACEBOOK",status);
 			if(status.equals(SUCCESS_MESSAGE)){
 				parsedFacebookId = jsonString.getString("facebookId");
+				Log.d("FACEBOOK ID",parsedFacebookId);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -233,6 +257,8 @@ public class ReceiveContact extends Activity implements OnClickListener {
 		if(parsedFacebookId != null){
 			makeMeRequest(Session.getActiveSession()); 
 			showFBDialog(parsedFacebookId, parsedName);
+			
+			
 		}    	
     }
     
@@ -259,10 +285,11 @@ public class ReceiveContact extends Activity implements OnClickListener {
  		AlertDialog.Builder builder = new AlertDialog.Builder(this);
  	   builder.setMessage("Do you want to visit " + name + "'s facebook page.")
        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-        	 WebView webview = new WebView(getApplicationContext());
-      		 setContentView(webview);
-      		 webview.loadUrl("http://www.facebook.com/"+facebookId);
+           public void onClick(DialogInterface dialog, int id) {     		
+        	// launch facebook app with user's profile
+        	String uri = "fb://profile/" + facebookId ;
+        	Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        	startActivity(intent);
            }
        })
        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -270,7 +297,12 @@ public class ReceiveContact extends Activity implements OnClickListener {
                
            }
        });
+ 	   builder.create();
+ 	   builder.show();
  	}
+ 	
+ 	
+ 	
  	
  	private void makeMeRequest(final Session session) {
 	    Request request = Request.newMeRequest(session, 

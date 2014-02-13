@@ -21,14 +21,6 @@
         android:text="Display QR Code"
         android:textStyle="bold" />
 
-    <com.facebook.widget.LoginButton
-        android:id="@+id/authButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/bReceiveContactQR"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="108dp" />
-
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="500dp"
@@ -50,5 +42,24 @@
         android:onClick="qrButtonsClick"
         android:text="Receive QR Code"
         android:textStyle="bold" />
+
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bReceiveContactQR"
+        android:layout_below="@+id/bShowFriends"
+        android:layout_marginTop="42dp" />
+
+    <Button
+        android:id="@+id/bShowFriends"
+        android:layout_width="180dp"       
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/bReceiveContactQR"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="73dp"
+        android:background="@drawable/button_selector"
+        android:textStyle="bold"
+        android:text="Show Friends" />
 
 </RelativeLayout>
