@@ -57,6 +57,11 @@ public class MainActivity extends FragmentActivity {
 			Intent receiveIntent = new Intent("android.intent.action.RECEIVECONTACT");			
 			startActivity(receiveIntent);
 			break;
+		case R.id.bShowFriends:
+			Intent showFriends = new Intent("android.intent.action.SHOWFRIENDS");
+			startActivity(showFriends);
+			break;
+		
 		}
 	}
 

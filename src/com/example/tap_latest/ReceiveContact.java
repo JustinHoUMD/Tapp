@@ -32,6 +32,7 @@ import net.sourceforge.zbar.SymbolSet;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.LocalActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -289,7 +290,10 @@ public class ReceiveContact extends Activity implements OnClickListener {
         	// launch facebook app with user's profile
         	String uri = "fb://profile/" + facebookId ;
         	Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        	startActivity(intent);
+        	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        	
            }
        })
        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -305,6 +309,7 @@ public class ReceiveContact extends Activity implements OnClickListener {
  	
  	
  	private void makeMeRequest(final Session session) {
+ 		
 	    Request request = Request.newMeRequest(session, 
 	            new Request.GraphUserCallback() {
 

@@ -46,20 +46,21 @@
     <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/bReceiveContactQR"
-        android:layout_below="@+id/bShowFriends"
+        android:layout_height="wrap_content"        
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/bShowFriends"      
         android:layout_marginTop="42dp" />
 
     <Button
         android:id="@+id/bShowFriends"
-        android:layout_width="180dp"       
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bReceiveContactQR"
         android:layout_alignTop="@+id/bReceiveContactQR"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="73dp"
+        android:layout_marginTop="74dp"
         android:background="@drawable/button_selector"
-        android:textStyle="bold"
-        android:text="Show Friends" />
+        android:onClick="qrButtonsClick"
+        android:text="Show Friends"
+        android:textStyle="bold" />
 
 </RelativeLayout>

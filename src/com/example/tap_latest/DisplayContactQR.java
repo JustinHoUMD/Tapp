@@ -136,8 +136,7 @@ public class DisplayContactQR extends Activity {
 	                    facebookId = user.getId(); 
 	                    Log.i(LOG_TAG, "Facebook ID QR Generate code: "+facebookId);	                    
 	                    facebookStatusTv.setText("Logged into facebook");                 
-	                    facebookStatusTv.setBackgroundResource(R.drawable.logged_in);
-	                    
+	                    facebookStatusTv.setBackgroundResource(R.drawable.logged_in);	                    
 	                    ContactData = generateContactInfo(SUCCESS_MESSAGE);
 	            		drawQRCode(ContactData,400,400);
 	                }
